@@ -1,0 +1,42 @@
+WGI_OS_MAJOR_VERSION	:COMMAND:
+	uname -r | cut -c1
+
+.SOURCE.c	:	..
+
+if "$(WGI_OS_MAJOR_VERSION:N=5)"
+.SOURCE.h	:						\
+			/usr/dt/include /usr/openwin/include	\
+			../../release/include			\
+			../../include
+else
+.SOURCE.h	:						\
+			/usr/add-on/motif1.2.2/usr/include	\
+			../../release/include			\
+			../../include
+end
+
+CFILES		=			\
+			cputimer.c	\
+			devicetb.c	\
+			errprint.c	\
+			fontdata.c	\
+			freetabl.c	\
+			geometry.c	\
+			globvars.c	\
+			mappings.c	\
+			pickings.c	\
+			psdriver.c	\
+			realtime.c	\
+			rubberio.c	\
+			segments.c	\
+			segprims.c	\
+			utilitys.c	\
+			vecttext.c	\
+			viewport.c	\
+			x11drive.c
+
+CCFLAGS		+=	-DWGI_OS_MAJOR_VERSION=$(WGI_OS_MAJOR_VERSION)
+
+all: $(LIBRARY)
+
+$(LIBRARY) :: $(CFILES)

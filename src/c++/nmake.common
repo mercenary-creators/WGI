@@ -1,0 +1,39 @@
+WGI_OS_MAJOR_VERSION	:COMMAND:
+	uname -r | cut -c1
+
+.SOURCE.C	:	..
+
+if "$(WGI_OS_MAJOR_VERSION:N=5)"
+
+%.o	:	%.C
+		$(CCROOTDIR)/bin/CC $(CCFLAGS) -c $(>)
+
+CCROOTDIR       =       /opt4/SUNWspro/SC3.0.1
+CC              =       $(CCROOTDIR)/bin/CC
+REUSE           =       /opt4/reuse_4.0.1
+
+.SOURCE.h	:						\
+			$(REUSE)/SCincl				\
+                        $(CCROOTDIR)/include/CC			\
+			$(CCROOTDIR)/include/cc			\
+                        /opt4/ICS/Motif/usr/include		\
+			../../release/include			\
+
+CCFLAGS         +=      -DCC30 -DSC201 -DSOLARIS
+
+else
+
+.SOURCE.h	:						\
+			/usr/add-on/motif1.2.2/usr/include	\
+			../../release/include			\
+			$(CCROOTDIR)/include
+end
+
+CPLUSFILES	=	Wgi.C WgiWorld.C WgiDevice.C WgiRubber.C \
+			Zfile.C DebugFlag.C WgiColor.C Form.C Form2.C
+
+CCFLAGS		+=	-DWGI_OS_MAJOR_VERSION=$(WGI_OS_MAJOR_VERSION)
+
+all: $(LIBRARY)
+
+$(LIBRARY) :: $(CPLUSFILES)
